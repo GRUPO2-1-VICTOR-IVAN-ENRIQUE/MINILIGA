@@ -1,0 +1,3 @@
+futbolistas [#id, nombre, fecha_nacimiento, sueldo, traspaso, activo]
+entrenadores [#id, nombre, fecha_inicio, sueldo, equipos_entrenados, principal, #id_jugador]
+equipos [#id, nombre, fecha_fundacion, patrimonio, numero_jugadores, clasificado, #id_jugador, #id_entrenador]
