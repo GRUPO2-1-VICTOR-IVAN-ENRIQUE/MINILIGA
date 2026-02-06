@@ -8,23 +8,24 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.proinceringenieros.miniliga.Controller">
 
+    <!-- Menú superior -->
     <top>
         <VBox>
             <MenuBar>
-                <Menu text="Archivo">
-                    <MenuItem text="Exportar JSON" onAction="#onExportarJson"/>
+                <Menu text="Gestión">
+                    <MenuItem text="Futbolistas" onAction="#onAbrirFutbolistas"/>
+                    <MenuItem text="Equipos" onAction="#onAbrirEquipos"/>
+                    <MenuItem text="Entrenadores" onAction="#onAbrirEntrenadores"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="Salir" onAction="#onSalir"/>
                 </Menu>
 
-                <Menu text="Gestión">
-                    <MenuItem text="Futbolistas (CRUD)" onAction="#onAbrirFutbolistas"/>
-                    <MenuItem text="Equipos (CRUD)" onAction="#onAbrirEquipos"/>
-                    <MenuItem text="Entrenadores (CRUD)" onAction="#onAbrirEntrenadores"/>
+                <Menu text="Consultas">
+                    <MenuItem text="Tabla (TableView)" onAction="#onAbrirTabla"/>
                 </Menu>
 
-                <Menu text="Vistas">
-                    <MenuItem text="Tabla (TableView)" onAction="#onAbrirTabla"/>
+                <Menu text="Exportar">
+                    <MenuItem text="Exportar (pendiente)" onAction="#onExportar"/>
                 </Menu>
 
                 <Menu text="Ayuda">
@@ -32,26 +33,37 @@
                 </Menu>
             </MenuBar>
 
+            <!-- Barra rápida -->
             <ToolBar>
                 <Button text="Futbolistas" onAction="#onAbrirFutbolistas"/>
                 <Button text="Equipos" onAction="#onAbrirEquipos"/>
                 <Button text="Entrenadores" onAction="#onAbrirEntrenadores"/>
-                <Separator/>
+                <Separator orientation="VERTICAL"/>
                 <Button text="Tabla" onAction="#onAbrirTabla"/>
-                <Separator/>
-                <Button text="Exportar JSON" onAction="#onExportarJson"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Salir" onAction="#onSalir"/>
             </ToolBar>
         </VBox>
     </top>
 
+    <!-- Contenido central: aquí se cargan los CRUD -->
     <center>
-        <!-- Aquí vamos “inyectando” cada FXML -->
-        <StackPane fx:id="contentPane" style="-fx-padding: 10;"/>
+        <StackPane fx:id="contentPane" style="-fx-padding: 10;">
+            <VBox spacing="10" style="-fx-alignment: CENTER; -fx-padding: 30;">
+                <Label text="MiniLiga - Pantalla Principal"
+                       style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                <Label text="Usa el menú superior para abrir los CRUD y la vista de tablas."
+                       style="-fx-font-size: 14;"/>
+            </VBox>
+        </StackPane>
     </center>
 
     <bottom>
-        <Label fx:id="lblStatus" text="Listo." style="-fx-padding: 8;"/>
+        <HBox spacing="10" style="-fx-padding: 8;">
+            <Label fx:id="lblEstado" text="Listo."/>
+        </HBox>
     </bottom>
 
 </BorderPane>
+
 

@@ -6,58 +6,81 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class Controller {
 
     @FXML private StackPane contentPane;
-    @FXML private Label lblStatus;
+    @FXML private Label lblEstado;
 
     @FXML
     public void initialize() {
-        // Carga inicial: futbolistas
-        cargarVista("futbolista-view.fxml", "Futbolistas");
+        lblEstado.setText("Pantalla principal cargada.");
     }
 
-    @FXML private void onAbrirFutbolistas() { cargarVista("futbolista-view.fxml", "Futbolistas"); }
-    @FXML private void onAbrirEquipos()     { cargarVista("equipo-view.fxml", "Equipos"); }
-    @FXML private void onAbrirEntrenadores(){ cargarVista("entrenador-view.fxml", "Entrenadores"); }
-
-    @FXML private void onAbrirTabla() {
-        // Pendiente: tabla-view.fxml
-        cargarVista("tabla-view.fxml", "TableView");
+    @FXML
+    private void onAbrirFutbolistas() {
+        loadCenter("futbolista-view.fxml", "CRUD Futbolistas");
     }
 
-    @FXML private void onExportarJson() {
-        // Pendiente: exportación real
-        lblStatus.setText("Exportar JSON (pendiente de implementar).");
-        Alert a = new Alert(Alert.AlertType.INFORMATION, "Exportar JSON: lo implementamos en el siguiente paso.");
-        a.setHeaderText(null);
+    @FXML
+    private void onAbrirEquipos() {
+        loadCenter("equipo-view.fxml", "CRUD Equipos");
+    }
+
+    @FXML
+    private void onAbrirEntrenadores() {
+        loadCenter("entrenador-view.fxml", "CRUD Entrenadores");
+    }
+
+    @FXML
+    private void onAbrirTabla() {
+        loadCenter("tabla-view.fxml", "Vista Tabla (TableView)");
+    }
+
+    @FXML
+    private void onExportar() {
+        // Voluntario: preparado, pero no implementado aquí
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setTitle("Exportar");
+        a.setHeaderText("Exportar (voluntario)");
+        a.setContentText("Funcionalidad preparada. Se implementará en el apartado voluntario.");
         a.showAndWait();
     }
 
-    @FXML private void onAcercaDe() {
-        Alert a = new Alert(Alert.AlertType.INFORMATION,
-                "MiniLiga - Prácticas Presenciales 1ª Evaluación\nCRUD + Persistencia + TableView + Export JSON");
-        a.setHeaderText("Acerca de");
+    @FXML
+    private void onAcercaDe() {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setTitle("Acerca de");
+        a.setHeaderText("MiniLiga");
+        a.setContentText("Aplicación JavaFX - CRUD Futbolistas/Equipos/Entrenadores + TablaView.");
         a.showAndWait();
     }
 
-    @FXML private void onSalir() {
-        // aquí podrías llamar a DataStore.saveAll()
-        System.exit(0);
+    @FXML
+    private void onSalir() {
+        Stage stage = (Stage) contentPane.getScene().getWindow();
+        stage.close();
     }
 
-    private void cargarVista(String fxml, String titulo) {
+    // ----------------- helper -----------------
+
+    private void loadCenter(String fxmlName, String estado) {
         try {
-            Parent view = FXMLLoader.load(getClass().getResource(fxml));
-            contentPane.getChildren().setAll(view);
-            lblStatus.setText("Vista: " + titulo);
-        } catch (Exception ex) {
-            lblStatus.setText("Error cargando: " + fxml);
-            Alert a = new Alert(Alert.AlertType.ERROR, "No se pudo cargar " + fxml + "\n" + ex.getMessage());
-            a.setHeaderText("Error");
+            FXMLLoader loader = new FXMLLoader(Application.class.getResource(fxmlName));
+            Parent root = loader.load();
+
+            contentPane.getChildren().setAll(root);
+            lblEstado.setText("Abierto: " + estado);
+        } catch (IOException e) {
+            lblEstado.setText("Error al abrir: " + fxmlName);
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Error");
+            a.setHeaderText("No se pudo cargar la vista: " + fxmlName);
+            a.setContentText(e.getMessage());
             a.showAndWait();
         }
     }
 }
-
