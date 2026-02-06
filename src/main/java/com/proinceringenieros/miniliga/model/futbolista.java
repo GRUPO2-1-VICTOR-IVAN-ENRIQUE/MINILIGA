@@ -1,0 +1,84 @@
+package com.proinceringenieros.miniliga.model;
+
+import java.time.LocalDate;
+
+
+import java.time.LocalDate;
+
+public class futbolista {
+    private int id;
+    private String nombre;     // obligatorio
+    private LocalDate fechaNacimiento;      // obligatorio + formato
+    private float sueldo ;       // float
+    private int traspaso;  //int
+    private boolean activo;    // boolean
+
+    private int idEquipo;
+
+    public futbolista(int id, String nombre, LocalDate fechaNacimiento, float sueldo, int traspaso, boolean activo, int idEquipo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.fechaNacimiento = fechaNacimiento;
+        this.sueldo = sueldo;
+        this.traspaso = traspaso;
+        this.activo = activo;
+        this.idEquipo = idEquipo;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public float getSueldo() {
+        return sueldo;
+    }
+
+    public void setSueldo(float sueldo) {
+        this.sueldo = sueldo;
+    }
+
+    public int getTraspaso() {
+        return traspaso;
+    }
+
+    public void setTraspaso(int traspaso) {
+        this.traspaso = traspaso;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public int getIdEquipo() {
+        return idEquipo;
+    }
+
+    public void setIdEquipo(int idEquipo) {
+        this.idEquipo = idEquipo;
+    }
+}
+
