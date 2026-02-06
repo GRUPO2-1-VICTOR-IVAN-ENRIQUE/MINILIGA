@@ -1,16 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.proinceringenieros.miniliga.Controller">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<BorderPane prefWidth="1100" prefHeight="700"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.proinceringenieros.miniliga.Controller">
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="Archivo">
+                    <MenuItem text="Exportar JSON" onAction="#onExportarJson"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Salir" onAction="#onSalir"/>
+                </Menu>
+
+                <Menu text="Gestión">
+                    <MenuItem text="Futbolistas (CRUD)" onAction="#onAbrirFutbolistas"/>
+                    <MenuItem text="Equipos (CRUD)" onAction="#onAbrirEquipos"/>
+                    <MenuItem text="Entrenadores (CRUD)" onAction="#onAbrirEntrenadores"/>
+                </Menu>
+
+                <Menu text="Vistas">
+                    <MenuItem text="Tabla (TableView)" onAction="#onAbrirTabla"/>
+                </Menu>
+
+                <Menu text="Ayuda">
+                    <MenuItem text="Acerca de" onAction="#onAcercaDe"/>
+                </Menu>
+            </MenuBar>
+
+            <ToolBar>
+                <Button text="Futbolistas" onAction="#onAbrirFutbolistas"/>
+                <Button text="Equipos" onAction="#onAbrirEquipos"/>
+                <Button text="Entrenadores" onAction="#onAbrirEntrenadores"/>
+                <Separator/>
+                <Button text="Tabla" onAction="#onAbrirTabla"/>
+                <Separator/>
+                <Button text="Exportar JSON" onAction="#onExportarJson"/>
+            </ToolBar>
+        </VBox>
+    </top>
+
+    <center>
+        <!-- Aquí vamos “inyectando” cada FXML -->
+        <StackPane fx:id="contentPane" style="-fx-padding: 10;"/>
+    </center>
+
+    <bottom>
+        <Label fx:id="lblStatus" text="Listo." style="-fx-padding: 8;"/>
+    </bottom>
+
+</BorderPane>
+
