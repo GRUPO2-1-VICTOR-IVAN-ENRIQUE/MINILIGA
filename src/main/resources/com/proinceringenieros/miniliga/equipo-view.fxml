@@ -45,15 +45,7 @@
             <Label text="Clasificado (boolean):" GridPane.columnIndex="0" GridPane.rowIndex="5" />
             <CheckBox fx:id="chkClasificado" text="Sí" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-            <Label text="Id jugador (FK opcional):" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-            <ComboBox fx:id="cmbIdJugador" promptText="Selecciona..." GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Label fx:id="errJugador" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-
-            <Label text="Id entrenador (FK opcional):" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-            <ComboBox fx:id="cmbIdEntrenador" promptText="Selecciona..." GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <Label fx:id="errEntrenador" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-
-            <Label fx:id="lblMensaje" style="-fx-text-fill: #1b5e20;" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Label fx:id="lblMensaje" style="-fx-text-fill: #1b5e20;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
         </GridPane>
     </center>
 

@@ -13,21 +13,14 @@ public class equipo implements Serializable {
     private int numeroJugadores;           // int
     private boolean clasificado;           // boolean
 
-    // FKs opcionales en UI (ComboBox puede estar sin seleccionar)
-    private Integer idJugador;             // puede ser null
-    private Integer idEntrenador;          // puede ser null
-
     public equipo(int id, String nombre, LocalDate fechaFundacion,
-                  float patrimonio, int numeroJugadores,
-                  boolean clasificado, Integer idJugador, Integer idEntrenador) {
+                  float patrimonio, int numeroJugadores, boolean clasificado) {
         this.id = id;
         this.nombre = nombre;
         this.fechaFundacion = fechaFundacion;
         this.patrimonio = patrimonio;
         this.numeroJugadores = numeroJugadores;
         this.clasificado = clasificado;
-        this.idJugador = idJugador;
-        this.idEntrenador = idEntrenador;
     }
 
     public int getId() { return id; }
@@ -47,11 +40,4 @@ public class equipo implements Serializable {
 
     public boolean isClasificado() { return clasificado; }
     public void setClasificado(boolean clasificado) { this.clasificado = clasificado; }
-
-    public Integer getIdJugador() { return idJugador; }
-    public void setIdJugador(Integer idJugador) { this.idJugador = idJugador; }
-
-    public Integer getIdEntrenador() { return idEntrenador; }
-    public void setIdEntrenador(Integer idEntrenador) { this.idEntrenador = idEntrenador; }
 }
-

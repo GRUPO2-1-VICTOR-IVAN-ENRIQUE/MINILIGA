@@ -17,15 +17,10 @@ public class equipoController {
     @FXML private TextField txtNumeroJugadores;
     @FXML private CheckBox chkClasificado;
 
-    @FXML private ComboBox<Integer> cmbIdJugador;
-    @FXML private ComboBox<Integer> cmbIdEntrenador;
-
     @FXML private Label errNombre;
     @FXML private Label errFechaFundacion;
     @FXML private Label errPatrimonio;
     @FXML private Label errNumeroJugadores;
-    @FXML private Label errJugador;
-    @FXML private Label errEntrenador;
     @FXML private Label lblMensaje;
     @FXML private Label lblPosicion;
 
@@ -35,10 +30,6 @@ public class equipoController {
 
     @FXML
     public void initialize() {
-        // IDs de ejemplo (luego los cargarás de BD/DAO)
-        cmbIdJugador.setItems(FXCollections.observableArrayList(1,2,3,4,5));
-        cmbIdEntrenador.setItems(FXCollections.observableArrayList(1,2,3,4,5));
-
         if (lista.isEmpty()) onNuevo();
         else { index = 0; show(lista.get(index)); refreshPos(); }
     }
@@ -52,8 +43,6 @@ public class equipoController {
         txtPatrimonio.setText("");
         txtNumeroJugadores.setText("");
         chkClasificado.setSelected(false);
-        cmbIdJugador.getSelectionModel().clearSelection();
-        cmbIdEntrenador.getSelectionModel().clearSelection();
         lblMensaje.setText("Nuevo equipo listo.");
         refreshPos();
     }
@@ -67,6 +56,7 @@ public class equipoController {
         lista.add(e);
         index = lista.size() - 1;
         show(e);
+
         lblMensaje.setText("Equipo guardado.");
         refreshPos();
     }
@@ -85,8 +75,6 @@ public class equipoController {
         current.setPatrimonio(edited.getPatrimonio());
         current.setNumeroJugadores(edited.getNumeroJugadores());
         current.setClasificado(edited.isClasificado());
-        current.setIdJugador(edited.getIdJugador());
-        current.setIdEntrenador(edited.getIdEntrenador());
 
         show(current);
         lblMensaje.setText("Equipo modificado.");
@@ -143,12 +131,6 @@ public class equipoController {
         txtPatrimonio.setText(String.valueOf(e.getPatrimonio()));
         txtNumeroJugadores.setText(String.valueOf(e.getNumeroJugadores()));
         chkClasificado.setSelected(e.isClasificado());
-
-        if (e.getIdJugador() == null) cmbIdJugador.getSelectionModel().clearSelection();
-        else cmbIdJugador.getSelectionModel().select(e.getIdJugador());
-
-        if (e.getIdEntrenador() == null) cmbIdEntrenador.getSelectionModel().clearSelection();
-        else cmbIdEntrenador.getSelectionModel().select(e.getIdEntrenador());
     }
 
     private equipo readFormForCreate() {
@@ -201,10 +183,6 @@ public class equipoController {
             ok = false;
         }
 
-        // FKs opcionales: si el enunciado las obliga, lo cambiamos a obligatorio
-        Integer idJugador = cmbIdJugador.getSelectionModel().getSelectedItem();
-        Integer idEntrenador = cmbIdEntrenador.getSelectionModel().getSelectedItem();
-
         if (!ok) {
             lblMensaje.setText("Revisa los campos marcados.");
             return null;
@@ -216,9 +194,7 @@ public class equipoController {
                 fund,
                 patrimonio,
                 numJug,
-                chkClasificado.isSelected(),
-                idJugador,
-                idEntrenador
+                chkClasificado.isSelected()
         );
     }
 
@@ -227,8 +203,6 @@ public class equipoController {
         errFechaFundacion.setText("");
         errPatrimonio.setText("");
         errNumeroJugadores.setText("");
-        if (errJugador != null) errJugador.setText("");
-        if (errEntrenador != null) errEntrenador.setText("");
     }
 
     private void refreshPos() {
