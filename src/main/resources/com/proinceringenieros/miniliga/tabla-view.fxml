@@ -17,6 +17,7 @@
 
     <center>
         <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
+
             <!-- FUTBOLISTAS -->
             <Tab text="Futbolistas">
                 <BorderPane style="-fx-padding: 10;">
@@ -43,13 +44,11 @@
                         <TableView fx:id="tvEquipos" prefHeight="600">
                             <columns>
                                 <TableColumn fx:id="colEId" text="ID" prefWidth="70"/>
-                                <TableColumn fx:id="colENombre" text="Nombre" prefWidth="200"/>
+                                <TableColumn fx:id="colENombre" text="Nombre" prefWidth="220"/>
                                 <TableColumn fx:id="colEFechaFund" text="Fundación" prefWidth="120"/>
                                 <TableColumn fx:id="colEPatrimonio" text="Patrimonio" prefWidth="120"/>
                                 <TableColumn fx:id="colENumJug" text="NºJug." prefWidth="80"/>
                                 <TableColumn fx:id="colEClasificado" text="Clasificado" prefWidth="100"/>
-                                <TableColumn fx:id="colEIdJugador" text="IdJugador" prefWidth="90"/>
-                                <TableColumn fx:id="colEIdEntrenador" text="IdEntrenador" prefWidth="110"/>
                             </columns>
                         </TableView>
                     </center>
@@ -68,11 +67,13 @@
                                 <TableColumn fx:id="colTSueldo" text="Sueldo" prefWidth="100"/>
                                 <TableColumn fx:id="colTEquipos" text="Equipos" prefWidth="90"/>
                                 <TableColumn fx:id="colTPrincipal" text="Principal" prefWidth="90"/>
+                                <TableColumn fx:id="colTIdEquipo" text="IdEquipo" prefWidth="90"/>
                             </columns>
                         </TableView>
                     </center>
                 </BorderPane>
             </Tab>
+
         </TabPane>
     </center>
 
@@ -84,3 +85,4 @@
     </bottom>
 
 </BorderPane>
+

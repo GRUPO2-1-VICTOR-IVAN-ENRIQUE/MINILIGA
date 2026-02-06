@@ -32,8 +32,6 @@ public class tablaController {
     @FXML private TableColumn<equipo, Float> colEPatrimonio;
     @FXML private TableColumn<equipo, Integer> colENumJug;
     @FXML private TableColumn<equipo, Boolean> colEClasificado;
-    @FXML private TableColumn<equipo, Integer> colEIdJugador;
-    @FXML private TableColumn<equipo, Integer> colEIdEntrenador;
 
     // Entrenadores
     @FXML private TableView<entrenador> tvEntrenadores;
@@ -43,6 +41,7 @@ public class tablaController {
     @FXML private TableColumn<entrenador, Float> colTSueldo;
     @FXML private TableColumn<entrenador, Integer> colTEquipos;
     @FXML private TableColumn<entrenador, Boolean> colTPrincipal;
+    @FXML private TableColumn<entrenador, Integer> colTIdEquipo;
 
     @FXML private Label lblInfo;
 
@@ -54,8 +53,7 @@ public class tablaController {
 
     @FXML
     public void initialize() {
-        // --- Bind columnas a getters (PropertyValueFactory llama getX / isX) ---
-        // Futbolistas (ajústalo si tus getters se llaman distinto)
+        // Futbolistas
         colFId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colFNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colFFechaNac.setCellValueFactory(new PropertyValueFactory<>("fechaNacimiento"));
@@ -71,8 +69,6 @@ public class tablaController {
         colEPatrimonio.setCellValueFactory(new PropertyValueFactory<>("patrimonio"));
         colENumJug.setCellValueFactory(new PropertyValueFactory<>("numeroJugadores"));
         colEClasificado.setCellValueFactory(new PropertyValueFactory<>("clasificado"));
-        colEIdJugador.setCellValueFactory(new PropertyValueFactory<>("idJugador"));
-        colEIdEntrenador.setCellValueFactory(new PropertyValueFactory<>("idEntrenador"));
 
         // Entrenadores
         colTId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -81,13 +77,12 @@ public class tablaController {
         colTSueldo.setCellValueFactory(new PropertyValueFactory<>("sueldo"));
         colTEquipos.setCellValueFactory(new PropertyValueFactory<>("equiposEntrenados"));
         colTPrincipal.setCellValueFactory(new PropertyValueFactory<>("principal"));
+        colTIdEquipo.setCellValueFactory(new PropertyValueFactory<>("idEquipo"));
 
-        // Asignar listas
         tvFutbolistas.setItems(dataF);
         tvEquipos.setItems(dataE);
         tvEntrenadores.setItems(dataT);
 
-        // Cargar datos iniciales
         recargar();
     }
 
