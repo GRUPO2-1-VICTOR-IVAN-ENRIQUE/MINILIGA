@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefWidth="1100" prefHeight="700"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.proinceringenieros.miniliga.tablaController">
+
+    <top>
+        <VBox spacing="6" style="-fx-padding: 12;">
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Vista Tablas (TableView)" />
+            <Label text="Consulta de registros desde el menú (supuesto obligatorio)." />
+        </VBox>
+    </top>
+
+    <center>
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
+            <!-- FUTBOLISTAS -->
+            <Tab text="Futbolistas">
+                <BorderPane style="-fx-padding: 10;">
+                    <center>
+                        <TableView fx:id="tvFutbolistas" prefHeight="600">
+                            <columns>
+                                <TableColumn fx:id="colFId" text="ID" prefWidth="70"/>
+                                <TableColumn fx:id="colFNombre" text="Nombre" prefWidth="180"/>
+                                <TableColumn fx:id="colFFechaNac" text="Nacimiento" prefWidth="120"/>
+                                <TableColumn fx:id="colFSueldo" text="Sueldo" prefWidth="100"/>
+                                <TableColumn fx:id="colFTraspaso" text="Traspaso" prefWidth="90"/>
+                                <TableColumn fx:id="colFActivo" text="Activo" prefWidth="80"/>
+                                <TableColumn fx:id="colFIdEquipo" text="IdEquipo" prefWidth="90"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                </BorderPane>
+            </Tab>
+
+            <!-- EQUIPOS -->
+            <Tab text="Equipos">
+                <BorderPane style="-fx-padding: 10;">
+                    <center>
+                        <TableView fx:id="tvEquipos" prefHeight="600">
+                            <columns>
+                                <TableColumn fx:id="colEId" text="ID" prefWidth="70"/>
+                                <TableColumn fx:id="colENombre" text="Nombre" prefWidth="200"/>
+                                <TableColumn fx:id="colEFechaFund" text="Fundación" prefWidth="120"/>
+                                <TableColumn fx:id="colEPatrimonio" text="Patrimonio" prefWidth="120"/>
+                                <TableColumn fx:id="colENumJug" text="NºJug." prefWidth="80"/>
+                                <TableColumn fx:id="colEClasificado" text="Clasificado" prefWidth="100"/>
+                                <TableColumn fx:id="colEIdJugador" text="IdJugador" prefWidth="90"/>
+                                <TableColumn fx:id="colEIdEntrenador" text="IdEntrenador" prefWidth="110"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                </BorderPane>
+            </Tab>
+
+            <!-- ENTRENADORES -->
+            <Tab text="Entrenadores">
+                <BorderPane style="-fx-padding: 10;">
+                    <center>
+                        <TableView fx:id="tvEntrenadores" prefHeight="600">
+                            <columns>
+                                <TableColumn fx:id="colTId" text="ID" prefWidth="70"/>
+                                <TableColumn fx:id="colTNombre" text="Nombre" prefWidth="220"/>
+                                <TableColumn fx:id="colTFechaInicio" text="Inicio" prefWidth="120"/>
+                                <TableColumn fx:id="colTSueldo" text="Sueldo" prefWidth="100"/>
+                                <TableColumn fx:id="colTEquipos" text="Equipos" prefWidth="90"/>
+                                <TableColumn fx:id="colTPrincipal" text="Principal" prefWidth="90"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                </BorderPane>
+            </Tab>
+        </TabPane>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" style="-fx-padding: 10;">
+            <Button text="Recargar" onAction="#onRecargar"/>
+            <Label fx:id="lblInfo" text="Listo."/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
