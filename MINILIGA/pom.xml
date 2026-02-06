@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.proinceringenieros.miniliga/com.proinceringenieros.miniliga.HelloApplication
+                                com.proinceringenieros.miniliga/com.proinceringenieros.miniliga.Application
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
