@@ -246,7 +246,7 @@ public class futbolistaController {
     private Integer parseIntSafe(String s) {
         try {
             if (s == null) return null;
-            String t = s.trim();
+            String t = s.trim() ;
             if (t.isEmpty()) return null;
             return Integer.parseInt(t);
         } catch (Exception e) {
