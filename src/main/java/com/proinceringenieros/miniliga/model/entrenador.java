@@ -13,14 +13,19 @@ public class entrenador implements Serializable {
     private int equiposEntrenados;       // int
     private boolean principal;           // boolean
 
+    // Relación: entrenador pertenece a un equipo (obligatorio)
+    private int idEquipo;
+
     public entrenador(int id, String nombre, LocalDate fechaInicio,
-                      float sueldo, int equiposEntrenados, boolean principal) {
+                      float sueldo, int equiposEntrenados, boolean principal,
+                      int idEquipo) {
         this.id = id;
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.sueldo = sueldo;
         this.equiposEntrenados = equiposEntrenados;
         this.principal = principal;
+        this.idEquipo = idEquipo;
     }
 
     public int getId() { return id; }
@@ -40,4 +45,8 @@ public class entrenador implements Serializable {
 
     public boolean isPrincipal() { return principal; }
     public void setPrincipal(boolean principal) { this.principal = principal; }
+
+    public int getIdEquipo() { return idEquipo; }
+    public void setIdEquipo(int idEquipo) { this.idEquipo = idEquipo; }
 }
+

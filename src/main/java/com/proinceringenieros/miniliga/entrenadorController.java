@@ -17,10 +17,14 @@ public class entrenadorController {
     @FXML private TextField txtEquiposEntrenados;
     @FXML private CheckBox chkPrincipal;
 
+    @FXML private ComboBox<Integer> cmbIdEquipo;
+
     @FXML private Label errNombre;
     @FXML private Label errFechaInicio;
     @FXML private Label errSueldo;
     @FXML private Label errEquiposEntrenados;
+    @FXML private Label errIdEquipo;
+
     @FXML private Label lblMensaje;
     @FXML private Label lblPosicion;
 
@@ -30,6 +34,12 @@ public class entrenadorController {
 
     @FXML
     public void initialize() {
+        // ids sugeridos (para que la rama compile sola sin DataStore)
+        if (cmbIdEquipo != null) {
+            cmbIdEquipo.setItems(FXCollections.observableArrayList(1,2,3,4,5,6,7,8,9,10));
+            cmbIdEquipo.setEditable(true);
+        }
+
         if (lista.isEmpty()) {
             onNuevo();
         } else {
@@ -48,6 +58,7 @@ public class entrenadorController {
         txtSueldo.setText("");
         txtEquiposEntrenados.setText("");
         chkPrincipal.setSelected(false);
+        if (cmbIdEquipo != null) cmbIdEquipo.getSelectionModel().clearSelection();
 
         lblMensaje.setText("Nuevo entrenador listo.");
         refreshPos();
@@ -86,6 +97,7 @@ public class entrenadorController {
         current.setSueldo(edited.getSueldo());
         current.setEquiposEntrenados(edited.getEquiposEntrenados());
         current.setPrincipal(edited.isPrincipal());
+        current.setIdEquipo(edited.getIdEquipo());
 
         show(current);
         lblMensaje.setText("Entrenador modificado.");
@@ -145,6 +157,16 @@ public class entrenadorController {
         txtSueldo.setText(String.valueOf(e.getSueldo()));
         txtEquiposEntrenados.setText(String.valueOf(e.getEquiposEntrenados()));
         chkPrincipal.setSelected(e.isPrincipal());
+
+        if (cmbIdEquipo != null) {
+            // intenta seleccionar; si no está en la lista, lo escribe en editor (editable)
+            Integer idEq = e.getIdEquipo();
+            if (cmbIdEquipo.getItems().contains(idEq)) cmbIdEquipo.getSelectionModel().select(idEq);
+            else {
+                cmbIdEquipo.getSelectionModel().clearSelection();
+                cmbIdEquipo.getEditor().setText(String.valueOf(idEq));
+            }
+        }
     }
 
     private entrenador readFormForCreate() {
@@ -197,6 +219,12 @@ public class entrenadorController {
             ok = false;
         }
 
+        Integer idEquipo = readIdEquipo();
+        if (idEquipo == null || idEquipo <= 0) {
+            errIdEquipo.setText("Obligatorio (>0)");
+            ok = false;
+        }
+
         if (!ok) {
             lblMensaje.setText("Revisa los campos marcados.");
             return null;
@@ -208,8 +236,20 @@ public class entrenadorController {
                 inicio,
                 sueldo,
                 eq,
-                chkPrincipal.isSelected()
+                chkPrincipal.isSelected(),
+                idEquipo
         );
+    }
+
+    private Integer readIdEquipo() {
+        if (cmbIdEquipo == null) return null;
+
+        Integer selected = cmbIdEquipo.getSelectionModel().getSelectedItem();
+        if (selected != null) return selected;
+
+        // si es editable, intenta leer lo que han escrito
+        String typed = cmbIdEquipo.getEditor() != null ? cmbIdEquipo.getEditor().getText() : null;
+        return parseIntSafe(typed);
     }
 
     private void clearErrors() {
@@ -217,6 +257,7 @@ public class entrenadorController {
         errFechaInicio.setText("");
         errSueldo.setText("");
         errEquiposEntrenados.setText("");
+        errIdEquipo.setText("");
     }
 
     private void refreshPos() {
@@ -248,3 +289,4 @@ public class entrenadorController {
         }
     }
 }
+

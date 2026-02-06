@@ -18,37 +18,46 @@
     <center>
         <GridPane hgap="12" vgap="10" style="-fx-padding: 20;">
             <columnConstraints>
-                <ColumnConstraints minWidth="200" />
+                <ColumnConstraints minWidth="220" />
                 <ColumnConstraints hgrow="ALWAYS" />
                 <ColumnConstraints minWidth="220" />
             </columnConstraints>
 
+            <!-- ID -->
             <Label text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
             <TextField fx:id="txtId" editable="false" promptText="(auto)" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
+            <!-- Nombre -->
             <Label text="Nombre (obligatorio):" GridPane.columnIndex="0" GridPane.rowIndex="1" />
             <TextField fx:id="txtNombre" promptText="Ej: Luis García" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="errNombre" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
+            <!-- Fecha inicio -->
             <Label text="Fecha inicio (obligatorio):" GridPane.columnIndex="0" GridPane.rowIndex="2" />
             <DatePicker fx:id="dpFechaInicio" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="errFechaInicio" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
+            <!-- Sueldo -->
             <Label text="Sueldo (float):" GridPane.columnIndex="0" GridPane.rowIndex="3" />
             <TextField fx:id="txtSueldo" promptText="Ej: 1800,50" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label fx:id="errSueldo" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="3" />
 
+            <!-- Equipos entrenados -->
             <Label text="Equipos entrenados (int):" GridPane.columnIndex="0" GridPane.rowIndex="4" />
             <TextField fx:id="txtEquiposEntrenados" promptText="Ej: 4" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="errEquiposEntrenados" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="4" />
 
+            <!-- Principal -->
             <Label text="Principal (boolean):" GridPane.columnIndex="0" GridPane.rowIndex="5" />
             <CheckBox fx:id="chkPrincipal" text="Sí" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-            <Label text="Id jugador (FK opcional):" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-            <ComboBox fx:id="cmbIdJugador" promptText="Selecciona..." GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Label fx:id="errJugador" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <!-- IdEquipo (obligatorio) -->
+            <Label text="IdEquipo (obligatorio):" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+            <ComboBox fx:id="cmbIdEquipo" editable="true" promptText="Selecciona o escribe ID"
+                      GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label fx:id="errIdEquipo" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="6" />
 
+            <!-- Mensaje -->
             <Label fx:id="lblMensaje" style="-fx-text-fill: #1b5e20;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
         </GridPane>
     </center>
