@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="650" prefWidth="1000"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.proinceringenieros.miniliga.entrenadorController">
+
+    <top>
+        <VBox spacing="6" style="-fx-padding: 12;">
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Gestión Entrenadores (CRUD)" />
+            <Label text="Alta / modificación / borrado / navegación (sin TableView)." />
+        </VBox>
+    </top>
+
+    <center>
+        <GridPane hgap="12" vgap="10" style="-fx-padding: 20;">
+            <columnConstraints>
+                <ColumnConstraints minWidth="200" />
+                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints minWidth="220" />
+            </columnConstraints>
+
+            <Label text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="txtId" editable="false" promptText="(auto)" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label text="Nombre (obligatorio):" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextField fx:id="txtNombre" promptText="Ej: Luis García" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="errNombre" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+
+            <Label text="Fecha inicio (obligatorio):" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <DatePicker fx:id="dpFechaInicio" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="errFechaInicio" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+            <Label text="Sueldo (float):" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <TextField fx:id="txtSueldo" promptText="Ej: 1800,50" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="errSueldo" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+
+            <Label text="Equipos entrenados (int):" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <TextField fx:id="txtEquiposEntrenados" promptText="Ej: 4" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="errEquiposEntrenados" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+
+            <Label text="Principal (boolean):" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <CheckBox fx:id="chkPrincipal" text="Sí" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+            <Label text="Id jugador (FK opcional):" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+            <ComboBox fx:id="cmbIdJugador" promptText="Selecciona..." GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label fx:id="errJugador" style="-fx-text-fill: red;" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+
+            <Label fx:id="lblMensaje" style="-fx-text-fill: #1b5e20;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+        </GridPane>
+    </center>
+
+    <bottom>
+        <VBox spacing="10" style="-fx-padding: 12;">
+            <Separator />
+
+            <HBox spacing="10">
+                <Button text="Nuevo" prefWidth="110" onAction="#onNuevo"/>
+                <Button text="Guardar" prefWidth="110" onAction="#onGuardar"/>
+                <Button text="Modificar" prefWidth="110" onAction="#onModificar"/>
+                <Button text="Eliminar" prefWidth="110" onAction="#onEliminar"/>
+            </HBox>
+
+            <HBox spacing="10">
+                <Button text="⟵ Anterior" prefWidth="120" onAction="#onAnterior"/>
+                <Button text="Siguiente ⟶" prefWidth="120" onAction="#onSiguiente"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Posición:"/>
+                <Label fx:id="lblPosicion" text="0/0"/>
+            </HBox>
+        </VBox>
+    </bottom>
+
+</BorderPane>
