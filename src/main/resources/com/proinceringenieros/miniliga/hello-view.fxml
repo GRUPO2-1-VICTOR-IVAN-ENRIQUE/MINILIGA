@@ -1,16 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.proinceringenieros.miniliga.Controller">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<BorderPane prefWidth="1100" prefHeight="700"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.proinceringenieros.miniliga.Controller">
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+    <!-- Menú superior -->
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="Gestión">
+                    <MenuItem text="Futbolistas" onAction="#onAbrirFutbolistas"/>
+                    <MenuItem text="Equipos" onAction="#onAbrirEquipos"/>
+                    <MenuItem text="Entrenadores" onAction="#onAbrirEntrenadores"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Salir" onAction="#onSalir"/>
+                </Menu>
+
+                <Menu text="Consultas">
+                    <MenuItem text="Tabla (TableView)" onAction="#onAbrirTabla"/>
+                </Menu>
+
+                <Menu text="Exportar">
+                    <MenuItem text="Exportar (pendiente)" onAction="#onExportar"/>
+                </Menu>
+
+                <Menu text="Ayuda">
+                    <MenuItem text="Acerca de" onAction="#onAcercaDe"/>
+                </Menu>
+            </MenuBar>
+
+            <!-- Barra rápida -->
+            <ToolBar>
+                <Button text="Futbolistas" onAction="#onAbrirFutbolistas"/>
+                <Button text="Equipos" onAction="#onAbrirEquipos"/>
+                <Button text="Entrenadores" onAction="#onAbrirEntrenadores"/>
+                <Separator orientation="VERTICAL"/>
+                <Button text="Tabla" onAction="#onAbrirTabla"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Salir" onAction="#onSalir"/>
+            </ToolBar>
+        </VBox>
+    </top>
+
+    <!-- Contenido central: aquí se cargan los CRUD -->
+    <center>
+        <StackPane fx:id="contentPane" style="-fx-padding: 10;">
+            <VBox spacing="10" style="-fx-alignment: CENTER; -fx-padding: 30;">
+                <Label text="MiniLiga - Pantalla Principal"
+                       style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                <Label text="Usa el menú superior para abrir los CRUD y la vista de tablas."
+                       style="-fx-font-size: 14;"/>
+            </VBox>
+        </StackPane>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" style="-fx-padding: 8;">
+            <Label fx:id="lblEstado" text="Listo."/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
+
+

@@ -144,7 +144,7 @@ public class LoginController {
     private void abrirVentanaLista() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("lista.fxml")
+                    getClass().getResource("hello-view.fxml")
             );
 
             Parent root = loader.load();

@@ -1,0 +1,260 @@
+package com.proinceringenieros.miniliga;
+
+import com.proinceringenieros.miniliga.model.equipo;
+import com.proinceringenieros.miniliga.services.DataStore2;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+
+import java.time.LocalDate;
+
+public class equipoController {
+
+    @FXML private TextField txtId;
+    @FXML private TextField txtNombre;
+    @FXML private DatePicker dpFechaFundacion;
+    @FXML private TextField txtPatrimonio;
+    @FXML private TextField txtNumeroJugadores;
+    @FXML private CheckBox chkClasificado;
+
+    @FXML private Label errNombre;
+    @FXML private Label errFechaFundacion;
+    @FXML private Label errPatrimonio;
+    @FXML private Label errNumeroJugadores;
+    @FXML private Label lblMensaje;
+    @FXML private Label lblPosicion;
+    private final DataStore2 ds = DataStore2.getInstance();
+    private final ObservableList<equipo> lista = FXCollections.observableArrayList();
+    private int index = -1;
+    private int nextId = 1;
+
+    @FXML
+    public void initialize() {
+        if (lista.isEmpty()) onNuevo();
+        else { index = 0; show(lista.get(index)); refreshPos(); }
+        reloadFromStore();     // <-- Aquí cargas "de nuevo" en la lista
+        if (!lista.isEmpty()) {
+            index = 0;
+            show(lista.get(index));
+        }
+        refreshPos();
+    }
+    private void reloadFromStore() {
+        lista.setAll(ds.getEquipos());   // <-- Copia desde persistencia a la lista JavaFX
+    }
+
+    @FXML
+    private void onNuevo() {
+        clearErrors();
+        txtId.setText("");
+        txtNombre.setText("");
+        dpFechaFundacion.setValue(null);
+        txtPatrimonio.setText("");
+        txtNumeroJugadores.setText("");
+        chkClasificado.setSelected(false);
+        lblMensaje.setText("Nuevo equipo listo.");
+        refreshPos();
+    }
+
+    @FXML
+    private void onGuardar() {
+        clearErrors();
+
+        equipo e = readFormForCreate();
+        if (e == null) return;
+
+
+        DataStore2 ds = DataStore2.getInstance();
+        ds.getEquipos().add(e);
+
+
+        lista.setAll(ds.getEquipos());
+
+        index = lista.size() - 1;
+        show(e);
+
+
+        DataStore2.save();
+
+        lblMensaje.setText("Equipo guardado.");
+        refreshPos();
+    }
+
+    @FXML
+    private void onModificar() {
+        clearErrors();
+        equipo current = getCurrent();
+        if (current == null) { lblMensaje.setText("No hay equipo para modificar."); return; }
+
+        equipo edited = readFormForEdit(current.getId());
+        if (edited == null) return;
+
+        current.setNombre(edited.getNombre());
+        current.setFechaFundacion(edited.getFechaFundacion());
+        current.setPatrimonio(edited.getPatrimonio());
+        current.setNumeroJugadores(edited.getNumeroJugadores());
+        current.setClasificado(edited.isClasificado());
+
+        show(current);
+        DataStore2.save();
+        lblMensaje.setText("Equipo modificado.");
+        refreshPos();
+    }
+
+    @FXML
+    private void onEliminar() {
+        equipo current = getCurrent();
+        if (current == null) { lblMensaje.setText("No hay equipo para eliminar."); return; }
+
+        lista.remove(index);
+
+        if (lista.isEmpty()) {
+            index = -1;
+            onNuevo();
+            lblMensaje.setText("Eliminado. Lista vacía.");
+            return;
+        }
+
+        index = Math.min(index, lista.size() - 1);
+        show(lista.get(index));
+        DataStore2.save();
+        lblMensaje.setText("Equipo eliminado.");
+        refreshPos();
+    }
+
+    @FXML
+    private void onAnterior() {
+        if (lista.isEmpty()) return;
+        index = Math.max(0, index - 1);
+        show(lista.get(index));
+        refreshPos();
+    }
+
+    @FXML
+    private void onSiguiente() {
+        if (lista.isEmpty()) return;
+        index = Math.min(lista.size() - 1, index + 1);
+        show(lista.get(index));
+        refreshPos();
+    }
+
+    // -------- helpers --------
+
+    private equipo getCurrent() {
+        if (index < 0 || index >= lista.size()) return null;
+        return lista.get(index);
+    }
+
+    private void show(equipo e) {
+        txtId.setText(String.valueOf(e.getId()));
+        txtNombre.setText(e.getNombre());
+        dpFechaFundacion.setValue(e.getFechaFundacion());
+        txtPatrimonio.setText(String.valueOf(e.getPatrimonio()));
+        txtNumeroJugadores.setText(String.valueOf(e.getNumeroJugadores()));
+        chkClasificado.setSelected(e.isClasificado());
+    }
+
+    private equipo readFormForCreate() {
+        equipo temp = readFormCommon(0);
+        if (temp == null) return null;
+        temp.setId(nextId++);
+        return temp;
+    }
+
+    private equipo readFormForEdit(int idActual) {
+        equipo temp = readFormCommon(idActual);
+        if (temp == null) return null;
+        temp.setId(idActual);
+        return temp;
+    }
+
+    private equipo readFormCommon(int id) {
+        boolean ok = true;
+
+        String nombre = txtNombre.getText();
+        if (nombre == null || nombre.trim().isEmpty()) {
+            errNombre.setText("Obligatorio");
+            ok = false;
+        }
+
+        LocalDate fund = dpFechaFundacion.getValue();
+        if (fund == null) {
+            errFechaFundacion.setText("Obligatorio");
+            ok = false;
+        } else if (fund.isAfter(LocalDate.now())) {
+            errFechaFundacion.setText("No puede ser futura");
+            ok = false;
+        }
+
+        Float patrimonio = parseFloatSafe(txtPatrimonio.getText());
+        if (patrimonio == null) {
+            errPatrimonio.setText("Número válido");
+            ok = false;
+        } else if (patrimonio < 0) {
+            errPatrimonio.setText("No puede ser negativo");
+            ok = false;
+        }
+
+        Integer numJug = parseIntSafe(txtNumeroJugadores.getText());
+        if (numJug == null) {
+            errNumeroJugadores.setText("Número válido");
+            ok = false;
+        } else if (numJug < 0) {
+            errNumeroJugadores.setText("No puede ser negativo");
+            ok = false;
+        }
+
+        if (!ok) {
+            lblMensaje.setText("Revisa los campos marcados.");
+            return null;
+        }
+
+        return new equipo(
+                id,
+                nombre.trim(),
+                fund,
+                patrimonio,
+                numJug,
+                chkClasificado.isSelected()
+        );
+    }
+
+    private void clearErrors() {
+        errNombre.setText("");
+        errFechaFundacion.setText("");
+        errPatrimonio.setText("");
+        errNumeroJugadores.setText("");
+    }
+
+    private void refreshPos() {
+        int total = lista.size();
+        if (total == 0) lblPosicion.setText("0/0");
+        else lblPosicion.setText((index + 1) + "/" + total);
+    }
+
+    private Integer parseIntSafe(String s) {
+        try {
+            if (s == null) return null;
+            String t = s.trim();
+            if (t.isEmpty()) return null;
+            return Integer.parseInt(t);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private Float parseFloatSafe(String s) {
+        try {
+            if (s == null) return null;
+            String t = s.trim();
+            if (t.isEmpty()) return null;
+            t = t.replace(",", ".");
+            return Float.parseFloat(t);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+}
+
+

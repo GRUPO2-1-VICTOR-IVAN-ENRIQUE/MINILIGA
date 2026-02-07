@@ -1,44 +1,49 @@
 package com.proinceringenieros.miniliga;
 
+import com.proinceringenieros.miniliga.model.equipo;
 import com.proinceringenieros.miniliga.model.futbolista;
+import com.proinceringenieros.miniliga.services.DataStore2;
+import com.proinceringenieros.miniliga.services.Validador;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class futbolistaController {
 
-    // --- CAMPOS FORM ---
     @FXML private TextField txtId;
     @FXML private TextField txtNombre;
-    @FXML private TextField txtEdad;          // EN TU FXML: esto es SUELDO (float)
-    @FXML private TextField txtTraspaso;      // EN TU FXML: traspaso (int)
+    @FXML private DatePicker dpFechaNacimiento;
+    @FXML private TextField txtSueldo;
+    @FXML private TextField txtTraspaso;
     @FXML private CheckBox chkActivo;
-    @FXML private DatePicker txtFechaNacimiento; // EN TU FXML: DatePicker
+    @FXML private ComboBox<Integer> cmbIdEquipo;
 
-    @FXML private ComboBox<Integer> cmbEquipo;
-
-    // --- ERRORES / MENSAJES ---
-    @FXML private Label errId;
     @FXML private Label errNombre;
-    @FXML private Label errEmail;    // EN TU FXML: lo usamos como error de FECHA NACIMIENTO
-    @FXML private Label errEdad;     // EN TU FXML: lo usamos como error de SUELDO
-    @FXML private Label errSaldo;    // EN TU FXML: lo usamos como error de TRASPASO
-    @FXML private Label errEntidadB; // EN TU FXML: error de equipo
+    @FXML private Label errFechaNacimiento;
+    @FXML private Label errSueldo;
+    @FXML private Label errTraspaso;
+    @FXML private Label errIdEquipo;
+
     @FXML private Label lblMensaje;
     @FXML private Label lblPosicion;
 
-    // --- “DATASTORE” SIMPLE EN MEMORIA ---
+    private final DataStore2 ds = DataStore2.getInstance();
+
+    // Lista de trabajo ligada a DataStore
     private final ObservableList<futbolista> lista = FXCollections.observableArrayList();
     private int index = -1;
-    private int nextId = 1;
 
     @FXML
     public void initialize() {
-        // Cargar equipos (IDs de ejemplo). Si tú tienes una clase Equipo, te lo adapto después.
-        cmbEquipo.setItems(FXCollections.observableArrayList(1, 2, 3, 4, 5));
+        // cargar lista desde DataStore
+        lista.setAll(ds.getFutbolistas());
+
+        // cargar ids de equipos en combo
+        refreshEquiposCombo();
 
         if (lista.isEmpty()) {
             onNuevo();
@@ -49,20 +54,20 @@ public class futbolistaController {
         }
     }
 
+    // ----------------- Acciones -----------------
+
     @FXML
     private void onNuevo() {
         clearErrors();
-
         txtId.setText("");
         txtNombre.setText("");
-        txtEdad.setText("");
+        dpFechaNacimiento.setValue(null);
+        txtSueldo.setText("");
         txtTraspaso.setText("");
-        chkActivo.setSelected(true);
-        txtFechaNacimiento.setValue(null);
-        cmbEquipo.getSelectionModel().clearSelection();
+        chkActivo.setSelected(false);
+        if (cmbIdEquipo != null) cmbIdEquipo.getSelectionModel().clearSelection();
 
-        lblMensaje.setText("Nuevo registro listo.");
-        // No cambiamos index aquí; el registro aún no existe
+        lblMensaje.setText("Nuevo futbolista listo.");
         refreshPos();
     }
 
@@ -73,11 +78,15 @@ public class futbolistaController {
         futbolista f = readFormForCreate();
         if (f == null) return;
 
-        lista.add(f);
-        index = lista.size() - 1;
+        // guardar en DataStore
+        ds.getFutbolistas().add(f);
 
-        show(f);
-        lblMensaje.setText("Guardado correctamente.");
+        // refrescar lista local y posicionar al final
+        lista.setAll(ds.getFutbolistas());
+        index = lista.size() - 1;
+        show(lista.get(index));
+        DataStore2.save();
+        lblMensaje.setText("Futbolista guardado.");
         refreshPos();
     }
 
@@ -87,13 +96,14 @@ public class futbolistaController {
 
         futbolista current = getCurrent();
         if (current == null) {
-            lblMensaje.setText("No hay registro para modificar.");
+            lblMensaje.setText("No hay futbolista para modificar.");
             return;
         }
 
         futbolista edited = readFormForEdit(current.getId());
         if (edited == null) return;
 
+        // aplicar cambios sobre el objeto actual (que está en ds)
         current.setNombre(edited.getNombre());
         current.setFechaNacimiento(edited.getFechaNacimiento());
         current.setSueldo(edited.getSueldo());
@@ -101,8 +111,10 @@ public class futbolistaController {
         current.setActivo(edited.isActivo());
         current.setIdEquipo(edited.getIdEquipo());
 
+        // refrescar vista
         show(current);
-        lblMensaje.setText("Modificado correctamente.");
+        DataStore2.save();
+        lblMensaje.setText("Futbolista modificado.");
         refreshPos();
     }
 
@@ -110,11 +122,15 @@ public class futbolistaController {
     private void onEliminar() {
         futbolista current = getCurrent();
         if (current == null) {
-            lblMensaje.setText("No hay registro para eliminar.");
+            lblMensaje.setText("No hay futbolista para eliminar.");
             return;
         }
 
-        lista.remove(index);
+        // borrar del DataStore
+        ds.getFutbolistas().remove(current);
+
+        // refrescar lista local
+        lista.setAll(ds.getFutbolistas());
 
         if (lista.isEmpty()) {
             index = -1;
@@ -125,7 +141,8 @@ public class futbolistaController {
 
         index = Math.min(index, lista.size() - 1);
         show(lista.get(index));
-        lblMensaje.setText("Eliminado.");
+        DataStore2.save();
+        lblMensaje.setText("Futbolista eliminado.");
         refreshPos();
     }
 
@@ -145,7 +162,7 @@ public class futbolistaController {
         refreshPos();
     }
 
-    // ---------------- HELPERS ----------------
+    // ----------------- Helpers -----------------
 
     private futbolista getCurrent() {
         if (index < 0 || index >= lista.size()) return null;
@@ -155,17 +172,25 @@ public class futbolistaController {
     private void show(futbolista f) {
         txtId.setText(String.valueOf(f.getId()));
         txtNombre.setText(f.getNombre());
-        txtFechaNacimiento.setValue(f.getFechaNacimiento());
-        txtEdad.setText(String.valueOf(f.getSueldo()));       // sueldo
-        txtTraspaso.setText(String.valueOf(f.getTraspaso())); // traspaso
+        dpFechaNacimiento.setValue(f.getFechaNacimiento());
+        txtSueldo.setText(String.valueOf(f.getSueldo()));
+        txtTraspaso.setText(String.valueOf(f.getTraspaso()));
         chkActivo.setSelected(f.isActivo());
-        cmbEquipo.getSelectionModel().select(Integer.valueOf(f.getIdEquipo()));
+
+        if (cmbIdEquipo != null) {
+            Integer idEq = f.getIdEquipo();
+            if (cmbIdEquipo.getItems().contains(idEq)) cmbIdEquipo.getSelectionModel().select(idEq);
+            else {
+                cmbIdEquipo.getSelectionModel().clearSelection();
+                cmbIdEquipo.getEditor().setText(String.valueOf(idEq));
+            }
+        }
     }
 
     private futbolista readFormForCreate() {
         futbolista temp = readFormCommon(0);
         if (temp == null) return null;
-        temp.setId(nextId++);
+        temp.setId(ds.nextFutbolistaId());
         return temp;
     }
 
@@ -180,35 +205,36 @@ public class futbolistaController {
         boolean ok = true;
 
         String nombre = txtNombre.getText();
-        if (nombre == null || nombre.trim().isEmpty()) {
+        if (!Validador.futbolistaNombreOk(nombre)) {
             errNombre.setText("Obligatorio");
             ok = false;
         }
 
-        LocalDate fechaNac = txtFechaNacimiento.getValue();
-        if (fechaNac == null) {
-            errEmail.setText("Obligatorio"); // (en tu FXML está mal nombrado)
-            ok = false;
-        } else if (fechaNac.isAfter(LocalDate.now())) {
-            errEmail.setText("No puede ser futura");
+        LocalDate nac = dpFechaNacimiento.getValue();
+        if (!Validador.futbolistaFechaNacimientoOk(nac)) {
+            errFechaNacimiento.setText(nac == null ? "Obligatorio" : "No puede ser futura");
             ok = false;
         }
 
-        Float sueldo = parseFloatSafe(txtEdad.getText());
-        if (sueldo == null) {
-            errEdad.setText("Número válido");
+        Float sueldo = Validador.parseFloatSafe(txtSueldo.getText());
+        if (!Validador.futbolistaSueldoOk(sueldo)) {
+            errSueldo.setText(">= 0 (número válido)");
             ok = false;
         }
 
-        Integer traspaso = parseIntSafe(txtTraspaso.getText());
-        if (traspaso == null) {
-            errSaldo.setText("Número válido");
+        Integer traspaso = Validador.parseIntSafe(txtTraspaso.getText());
+        if (!Validador.futbolistaTraspasoOk(traspaso)) {
+            errTraspaso.setText(">= 0 (número válido)");
             ok = false;
         }
 
-        Integer idEquipo = cmbEquipo.getSelectionModel().getSelectedItem();
-        if (idEquipo == null) {
-            errEntidadB.setText("Selecciona un equipo");
+        Integer idEquipo = readIdEquipo();
+        if (!Validador.futbolistaIdEquipoOk(idEquipo)) {
+            errIdEquipo.setText("Obligatorio (>0)");
+            ok = false;
+        } else if (!existsEquipo(idEquipo)) {
+            // coherencia: que exista el equipo en DataStore
+            errIdEquipo.setText("No existe ese equipo");
             ok = false;
         }
 
@@ -220,7 +246,7 @@ public class futbolistaController {
         return new futbolista(
                 id,
                 nombre.trim(),
-                fechaNac,
+                nac,
                 sueldo,
                 traspaso,
                 chkActivo.isSelected(),
@@ -228,42 +254,55 @@ public class futbolistaController {
         );
     }
 
+    private Integer readIdEquipo() {
+        String value = String.valueOf(cmbIdEquipo.getValue());
+
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        try {
+            // Espera formato: "ID - Nombre"
+            String idStr = value.split("-")[0].trim();
+            return Integer.parseInt(idStr);
+        } catch (Exception e) {
+            System.err.println("Error leyendo ID de equipo: " + value);
+            return null;
+        }
+    }
+
+
+    private boolean existsEquipo(Integer idEquipo) {
+        if (idEquipo == null) return false;
+        for (equipo e : ds.getEquipos()) {
+            if (e.getId() == idEquipo) return true;
+        }
+        return false;
+    }
+
+    private equipo[] getEquipos() {
+        return null;
+    }
+
+    private void refreshEquiposCombo() {
+        if (cmbIdEquipo == null) return;
+
+        List<Integer> ids = ds.getEquipos().stream().map(equipo::getId).toList();
+        cmbIdEquipo.setItems(FXCollections.observableArrayList(ids));
+        cmbIdEquipo.setEditable(true);
+    }
+
     private void clearErrors() {
-        if (errId != null) errId.setText("");
         errNombre.setText("");
-        errEmail.setText("");
-        errEdad.setText("");
-        errSaldo.setText("");
-        errEntidadB.setText("");
+        errFechaNacimiento.setText("");
+        errSueldo.setText("");
+        errTraspaso.setText("");
+        errIdEquipo.setText("");
     }
 
     private void refreshPos() {
         int total = lista.size();
         if (total == 0) lblPosicion.setText("0/0");
         else lblPosicion.setText((index + 1) + "/" + total);
-    }
-
-    private Integer parseIntSafe(String s) {
-        try {
-            if (s == null) return null;
-            String t = s.trim() ;
-            if (t.isEmpty()) return null;
-            return Integer.parseInt(t);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private Float parseFloatSafe(String s) {
-        try {
-            if (s == null) return null;
-            String t = s.trim();
-            if (t.isEmpty()) return null;
-            // Soporta coma o punto
-            t = t.replace(",", ".");
-            return Float.parseFloat(t);
-        } catch (Exception e) {
-            return null;
-        }
     }
 }
