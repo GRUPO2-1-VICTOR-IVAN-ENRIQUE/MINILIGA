@@ -72,10 +72,6 @@ public class entrenadorController {
         entrenador e = readFormForCreate();
         if (e == null) return;
         ds.getEntrenadores().add(e);
-//        lista.add(e);
-//        index = lista.size() - 1;
-//        show(e);
-
         lista.setAll(ds.getEntrenadores());
         index = lista.size() - 1;
         show(lista.get(index));
