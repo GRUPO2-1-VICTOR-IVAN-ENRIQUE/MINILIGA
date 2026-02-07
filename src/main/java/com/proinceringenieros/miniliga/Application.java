@@ -12,7 +12,6 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        // 1) Cargar datos persistidos ANTES de crear controllers/FXML
         DataStore2.load();
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("login-view.fxml"));
@@ -29,7 +28,7 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void stop() {
-        // 3) Seguridad extra: JavaFX llama a stop() al cerrar la app
+
         DataStore2.save();
     }
 }

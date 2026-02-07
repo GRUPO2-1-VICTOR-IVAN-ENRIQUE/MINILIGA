@@ -13,7 +13,7 @@ import java.util.List;
 public class DataStore2 implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    // Singleton
+
     private static transient DataStore2 instance;
 
     // Datos persistentes
@@ -26,7 +26,7 @@ public class DataStore2 implements Serializable {
     private int nextEquipoId = 1;
     private int nextEntrenadorId = 1;
 
-    // ✅ Constructor: NO debe llamar a getInstance() ni tener cosas de UI
+
     private DataStore2() {}
 
     public static DataStore2 getInstance() {
@@ -34,28 +34,28 @@ public class DataStore2 implements Serializable {
         return instance;
     }
 
-    // Ruta del fichero (multiusuario)
+
     private static Path getFilePath() {
         Path dir = Path.of(System.getProperty("user.home"), ".miniliga");
         try { Files.createDirectories(dir); } catch (IOException e) { e.printStackTrace(); }
         return dir.resolve("datastore.ser");
     }
 
-    // Asegura que las colecciones no sean null (por si cambiaste versiones)
+
     private void ensureCollections() {
         if (futbolistas == null) futbolistas = new ArrayList<>();
         if (equipos == null) equipos = new ArrayList<>();
         if (entrenadores == null) entrenadores = new ArrayList<>();
     }
 
-    // Limpieza básica antes de persistir/cargar
+
     private void sanitize() {
         futbolistas.removeIf(f -> f == null);
         equipos.removeIf(e -> e == null);
         entrenadores.removeIf(t -> t == null);
     }
 
-    // Cargar (al iniciar)
+
     public static void load() {
         Path file = getFilePath();
         System.out.println("[DataStore2] Cargando desde: " + file.toAbsolutePath());
