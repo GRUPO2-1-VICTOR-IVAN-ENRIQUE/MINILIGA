@@ -1,6 +1,7 @@
 package com.proinceringenieros.miniliga;
 
 import com.proinceringenieros.miniliga.model.equipo;
+import com.proinceringenieros.miniliga.services.DataStore2;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,7 +24,7 @@ public class equipoController {
     @FXML private Label errNumeroJugadores;
     @FXML private Label lblMensaje;
     @FXML private Label lblPosicion;
-
+    private final DataStore2 ds = DataStore2.getInstance();
     private final ObservableList<equipo> lista = FXCollections.observableArrayList();
     private int index = -1;
     private int nextId = 1;
@@ -32,6 +33,15 @@ public class equipoController {
     public void initialize() {
         if (lista.isEmpty()) onNuevo();
         else { index = 0; show(lista.get(index)); refreshPos(); }
+        reloadFromStore();     // <-- Aquí cargas "de nuevo" en la lista
+        if (!lista.isEmpty()) {
+            index = 0;
+            show(lista.get(index));
+        }
+        refreshPos();
+    }
+    private void reloadFromStore() {
+        lista.setAll(ds.getEquipos());   // <-- Copia desde persistencia a la lista JavaFX
     }
 
     @FXML
@@ -50,12 +60,22 @@ public class equipoController {
     @FXML
     private void onGuardar() {
         clearErrors();
+
         equipo e = readFormForCreate();
         if (e == null) return;
 
-        lista.add(e);
+
+        DataStore2 ds = DataStore2.getInstance();
+        ds.getEquipos().add(e);
+
+
+        lista.setAll(ds.getEquipos());
+
         index = lista.size() - 1;
         show(e);
+
+
+        DataStore2.save();
 
         lblMensaje.setText("Equipo guardado.");
         refreshPos();
@@ -77,6 +97,7 @@ public class equipoController {
         current.setClasificado(edited.isClasificado());
 
         show(current);
+        DataStore2.save();
         lblMensaje.setText("Equipo modificado.");
         refreshPos();
     }
@@ -97,6 +118,7 @@ public class equipoController {
 
         index = Math.min(index, lista.size() - 1);
         show(lista.get(index));
+        DataStore2.save();
         lblMensaje.setText("Equipo eliminado.");
         refreshPos();
     }

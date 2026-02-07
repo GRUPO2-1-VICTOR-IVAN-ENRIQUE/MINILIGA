@@ -85,7 +85,7 @@ public class futbolistaController {
         lista.setAll(ds.getFutbolistas());
         index = lista.size() - 1;
         show(lista.get(index));
-
+        DataStore2.save();
         lblMensaje.setText("Futbolista guardado.");
         refreshPos();
     }
@@ -113,6 +113,7 @@ public class futbolistaController {
 
         // refrescar vista
         show(current);
+        DataStore2.save();
         lblMensaje.setText("Futbolista modificado.");
         refreshPos();
     }
@@ -140,6 +141,7 @@ public class futbolistaController {
 
         index = Math.min(index, lista.size() - 1);
         show(lista.get(index));
+        DataStore2.save();
         lblMensaje.setText("Futbolista eliminado.");
         refreshPos();
     }
@@ -253,14 +255,22 @@ public class futbolistaController {
     }
 
     private Integer readIdEquipo() {
-        if (cmbIdEquipo == null) return null;
+        String value = String.valueOf(cmbIdEquipo.getValue());
 
-        Integer selected = cmbIdEquipo.getSelectionModel().getSelectedItem();
-        if (selected != null) return selected;
+        if (value == null || value.isBlank()) {
+            return null;
+        }
 
-        String typed = cmbIdEquipo.getEditor() != null ? cmbIdEquipo.getEditor().getText() : null;
-        return Validador.parseIntSafe(typed);
+        try {
+            // Espera formato: "ID - Nombre"
+            String idStr = value.split("-")[0].trim();
+            return Integer.parseInt(idStr);
+        } catch (Exception e) {
+            System.err.println("Error leyendo ID de equipo: " + value);
+            return null;
+        }
     }
+
 
     private boolean existsEquipo(Integer idEquipo) {
         if (idEquipo == null) return false;
@@ -268,6 +278,10 @@ public class futbolistaController {
             if (e.getId() == idEquipo) return true;
         }
         return false;
+    }
+
+    private equipo[] getEquipos() {
+        return null;
     }
 
     private void refreshEquiposCombo() {
