@@ -45,5 +45,7 @@ public class futbolista implements Serializable {
 
     public int getIdEquipo() { return idEquipo; }
     public void setIdEquipo(int idEquipo) { this.idEquipo = idEquipo; }
+
+
 }
 

@@ -270,6 +270,10 @@ public class futbolistaController {
         return false;
     }
 
+    private equipo[] getEquipos() {
+        return null;
+    }
+
     private void refreshEquiposCombo() {
         if (cmbIdEquipo == null) return;
 
